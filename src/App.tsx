@@ -15,7 +15,9 @@ import {
   PenTool, 
   HelpCircle,
   FileCheck2,
-  FileDown
+  FileDown,
+  Sun,
+  Moon
 } from "lucide-react";
 import Markdown from "react-markdown";
 
@@ -36,6 +38,28 @@ export default function App() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [histories, setHistories] = useState<AnalysisHistory[]>([]);
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | undefined>(undefined);
+
+  // Initialize theme state with localStorage preference or media query fallback
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") return saved;
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      return prefersDark ? "dark" : "light";
+    }
+    return "light";
+  });
+
+  // Handle HTML document class and storage syncing
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   // Load history from localStorage
   useEffect(() => {
@@ -217,29 +241,42 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 antialiased font-sans flex flex-col selection:bg-indigo-100 selection:text-indigo-900 justify-between">
+    <div className="min-h-screen bg-slate-50 text-slate-800 antialiased font-sans flex flex-col selection:bg-indigo-100 selection:text-indigo-900 dark:bg-slate-950 dark:text-slate-100 dark:selection:bg-indigo-950 dark:selection:text-indigo-200 justify-between">
       
       {/* Sleek Header Section */}
-      <header className="h-16 flex items-center justify-between px-6 sm:px-8 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+      <header className="h-16 flex items-center justify-between px-6 sm:px-8 bg-white border-b border-slate-200 dark:bg-slate-900 dark:border-slate-800 sticky top-0 z-40 shadow-xs">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-indigo-150 shadow-md">
             <Sparkles className="w-5.5 h-5.5 text-white animate-pulse" />
           </div>
           <div>
-            <h1 className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 tracking-tight flex items-center gap-2">
+            <h1 className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 tracking-tight flex items-center gap-2">
               AI 數據分析與洞察工具
             </h1>
-            <p className="text-[10px] sm:text-xs text-slate-500 hidden sm:block">
+            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
               貼上 CSV 表格，釋放先進語言模型 Gemini 的智慧決策洞察。
             </p>
           </div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <span className="text-xs font-semibold text-slate-550 bg-slate-100 px-2.5 py-1 rounded-md hidden md:inline-block">
-            模型：Gemini 3.5 Flash
+        <div className="flex items-center gap-3.5">
+          {/* Theme Switch Button */}
+          <button
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-600 dark:text-slate-300 transition-all cursor-pointer shadow-xs border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:scale-105 active:scale-95"
+            title={theme === "light" ? "切換至暗黑模式" : "切換至明亮模式"}
+          >
+            {theme === "light" ? (
+              <Moon className="w-4.5 h-4.5 text-slate-600" />
+            ) : (
+              <Sun className="w-4.5 h-4.5 text-amber-500 animate-spin" style={{ animationDuration: '8s' }} />
+            )}
+          </button>
+
+          <span className="text-xs font-semibold text-slate-500 bg-slate-100 dark:text-slate-300 dark:bg-slate-800 px-2.5 py-1 rounded-md hidden md:inline-block">
+            模型：Gemini 2.5 Flash
           </span>
-          <div className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold ring-1 ring-emerald-200 flex items-center gap-1.5 shadow-xs">
+          <div className="px-3 py-1 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 dark:ring-emerald-900/50 rounded-full text-xs font-bold ring-1 ring-emerald-200 flex items-center gap-1.5 shadow-xs">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
             系統就緒
           </div>
@@ -253,13 +290,13 @@ export default function App() {
         <div className="flex-1 flex flex-col gap-6 lg:max-w-[55%]">
           
           {/* Step 1: Demo Datasets Options Container */}
-          <section className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h2 className="font-semibold text-slate-800 text-sm flex items-center gap-2">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+              <h2 className="font-semibold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
                 1. 預載範例數據快速測試
               </h2>
-              <span className="text-xxs font-mono text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded">DEMOS</span>
+              <span className="text-xxs font-mono text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded">DEMOS</span>
             </div>
             
             <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -267,12 +304,12 @@ export default function App() {
                 <button
                   key={dataset.id}
                   onClick={() => handleSelectDemo(dataset.id)}
-                  className="text-left border border-slate-150 rounded-xl p-3 hover:border-indigo-500 hover:bg-indigo-50/20 active:bg-indigo-50/40 transition-all cursor-pointer group"
+                  className="text-left border border-slate-200 dark:border-slate-800 rounded-xl p-3 hover:border-indigo-500 hover:bg-indigo-50/20 active:bg-indigo-50/40 dark:hover:bg-indigo-950/20 dark:active:bg-indigo-950/40 transition-all cursor-pointer group"
                 >
-                  <span className="font-bold text-xs text-slate-800 group-hover:text-indigo-600 block mb-1">
+                  <span className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 block mb-1">
                     {dataset.title}
                   </span>
-                  <p className="text-[10px] text-slate-500 line-clamp-2 leading-normal">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-normal">
                     {dataset.description}
                   </p>
                 </button>
@@ -281,24 +318,24 @@ export default function App() {
           </section>
 
           {/* Step 2: Main CSV Input Code Text Area */}
-          <section className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h2 className="font-semibold text-slate-800 text-sm flex items-center gap-2">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+              <h2 className="font-semibold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
                 2. 貼上您的 CSV 數據
               </h2>
               {csvText && (
                 <button
                   onClick={() => setCsvText("")}
-                  className="text-slate-400 hover:text-rose-500 text-xs transition-colors flex items-center gap-1 cursor-pointer font-semibold"
+                  className="text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-450 text-xs transition-colors flex items-center gap-1 cursor-pointer font-semibold"
                 >
                   <Trash2 className="h-3.5 w-3.5" /> 清空數據
                 </button>
               )}
             </div>
             
-            <div className="p-4 bg-slate-50/20 flex flex-col gap-2">
-              <p className="text-xs text-slate-400 leading-normal">
+            <div className="p-4 bg-slate-50/20 dark:bg-slate-900/10 flex flex-col gap-2">
+              <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">
                 請確保第一列為英文 or 中文欄位標題，隨後各行以逗號隔開。亦可直接由 Excel 或試算表複製後直接貼上：
               </p>
 
@@ -307,7 +344,7 @@ export default function App() {
                 onChange={(e) => setCsvText(e.target.value)}
                 placeholder="在此貼上您的 CSV 資料表。例如：&#10;日期,通路類別,總曝光,實際點擊,轉換業績&#10;2026-05-18,社群投放,420000,12800,245000&#10;2026-05-19,關鍵字廣告,610000,28900,482000"
                 rows={7}
-                className="w-full p-4 bg-white border border-slate-200 rounded-xl resize-none text-xs font-mono focus:ring-2 focus:ring-indigo-550/20 focus:border-indigo-600 outline-none shadow-xs text-slate-700 leading-relaxed transition-all"
+                className="w-full p-4 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl resize-none text-xs font-mono focus:ring-2 focus:ring-indigo-550/20 dark:focus:ring-indigo-500/10 focus:border-indigo-600 dark:focus:border-indigo-500 outline-none shadow-xs text-slate-700 dark:text-slate-300 leading-relaxed transition-all"
               />
             </div>
           </section>
@@ -318,13 +355,13 @@ export default function App() {
           </div>
 
           {/* Step 3: Preset configuration setup */}
-          <section className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h2 className="font-semibold text-slate-800 text-sm flex items-center gap-2">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+              <h2 className="font-semibold text-slate-800 dark:text-slate-200 text-sm flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-violet-500"></span>
                 3. 設定 AI 分析維度
               </h2>
-              <span className="text-xxs font-mono text-violet-600 font-bold bg-violet-50 px-2 py-0.5 rounded">CONFIG</span>
+              <span className="text-xxs font-mono text-violet-600 dark:text-violet-400 font-bold bg-violet-50 dark:bg-violet-950/40 px-2 py-0.5 rounded">CONFIG</span>
             </div>
 
             <div className="p-4 flex flex-col gap-4">
@@ -343,22 +380,22 @@ export default function App() {
                       onClick={() => setPreset(p.id as AnalysisPreset)}
                       className={`p-3 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                         isSelected
-                          ? "border-indigo-600 bg-indigo-50 text-indigo-900 shadow-xs ring-1 ring-indigo-200"
-                          : "border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50/50"
+                          ? "border-indigo-600 bg-indigo-50 text-indigo-900 shadow-xs ring-1 ring-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-200 dark:border-indigo-500 dark:ring-indigo-900"
+                          : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-350 hover:bg-slate-50/50 dark:hover:bg-slate-800/40"
                       }`}
                     >
                       <span className="text-lg leading-none">{p.icon}</span>
                       <span className="font-bold text-xs block">{p.label}</span>
-                      <span className="text-[10px] text-slate-400 block">{p.desc}</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">{p.desc}</span>
                     </button>
                   );
                 })}
               </div>
 
               {/* Advanced User Focus Input line */}
-              <div className="border border-slate-150 rounded-xl p-3.5 bg-slate-50/30">
-                <div className="flex items-center gap-1.5 text-xs text-slate-700 font-bold mb-1.5">
-                  <Sliders className="h-3.5 w-3.5 text-indigo-600" />
+              <div className="border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 bg-slate-50/30 dark:bg-slate-900/30">
+                <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 font-bold mb-1.5">
+                  <Sliders className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
                   <span>我要指定特定分析目標 / 指標優先度 (選填)：</span>
                 </div>
                 <input
@@ -366,7 +403,7 @@ export default function App() {
                   placeholder="例：請優先幫我找出 ROI 最高與最低的管道，並點出 Q3 以來的轉折原因..."
                   value={customFocusText}
                   onChange={(e) => setCustomFocusText(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-white focus:outline-none focus:border-indigo-600 font-sans text-slate-700"
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-xs bg-white dark:bg-slate-950 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 font-sans text-slate-700 dark:text-slate-300"
                 />
               </div>
             </div>
@@ -374,7 +411,7 @@ export default function App() {
 
           {/* Trigger Request Actions */}
           {error && (
-            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-2.5 text-rose-800 text-xs shadow-xs animate-shake">
+            <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/45 rounded-xl p-4 flex items-start gap-2.5 text-rose-800 dark:text-rose-250 text-xs shadow-xs animate-shake">
               <AlertCircle className="h-4.5 w-4.5 shrink-0 text-rose-600 mt-0.5" />
               <div className="flex-1">
                 <span className="font-bold">分析未成功發送：</span>
@@ -389,7 +426,7 @@ export default function App() {
             className={`w-full py-4 px-6 rounded-xl font-bold text-sm tracking-wide text-white transition-all transform flex items-center justify-center gap-2 group cursor-pointer ${
               loading
                 ? "bg-slate-400 cursor-not-allowed shadow-none"
-                : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200/50 shadow-md shadow-indigo-150/40 active:scale-[0.99]"
+                : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200/50 shadow-md shadow-indigo-150/40 dark:shadow-none active:scale-[0.99]"
             }`}
           >
             {loading ? (
@@ -407,11 +444,11 @@ export default function App() {
 
           {/* Staggered progress status container */}
           {loading && (
-            <div className="border border-indigo-100 rounded-xl p-4 bg-indigo-50/20 text-center animate-pulse">
-              <p className="text-xs font-semibold text-indigo-700 mb-1">
+            <div className="border border-indigo-100 dark:border-indigo-900/40 rounded-xl p-4 bg-indigo-50/20 dark:bg-indigo-950/20 text-center animate-pulse">
+              <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-350 mb-1">
                 {loadingMessages[loadingStep]}
               </p>
-              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden max-w-[280px] mx-auto mt-2">
+              <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden max-w-[280px] mx-auto mt-2">
                 <div 
                   className="bg-indigo-600 h-1.5 rounded-full transition-all duration-1000"
                   style={{ width: `${(loadingStep + 1) * 25}%` }}
@@ -426,30 +463,30 @@ export default function App() {
         <div className="flex-1 flex flex-col gap-6 lg:max-w-[45%]">
           
           {/* Analysis Results Display Output Block */}
-          <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[420px] h-full flex-1">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col min-h-[420px] h-full flex-1">
             
             {/* Action Bar Header */}
-            <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-805/50 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-violet-500"></span>
-                <h2 className="font-semibold text-slate-800 text-sm">智能分析報告</h2>
+                <h2 className="font-semibold text-slate-800 dark:text-slate-200 text-sm">智能分析報告</h2>
               </div>
 
               {result && (
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={handleCopyResult}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                     title="一鍵複製結果"
                   >
                     {copySuccess ? (
                       <>
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                        <span className="text-emerald-700">已複製</span>
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <span className="text-emerald-700 dark:text-emerald-400">已複製</span>
                       </>
                     ) : (
                       <>
-                        <Copy className="h-3.5 w-3.5 text-slate-500" />
+                        <Copy className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
                         <span>複製</span>
                       </>
                     )}
@@ -457,10 +494,10 @@ export default function App() {
 
                   <button
                     onClick={handleDownloadReport}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                     title="下載 Markdown 報告檔"
                   >
-                    <Download className="h-3.5 w-3.5 text-slate-500" />
+                    <Download className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
                     <span>下載</span>
                   </button>
                 </div>
@@ -468,12 +505,12 @@ export default function App() {
             </div>
 
             {/* Structured Report Analysis Results container */}
-            <div className="flex-1 p-5 overflow-y-auto bg-slate-50/20 prose prose-indigo max-w-none">
+            <div className="flex-1 p-5 overflow-y-auto bg-slate-50/20 dark:bg-slate-950/15 prose prose-indigo max-w-none">
               {!result && !loading && (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <FileCheck2 className="h-12 w-12 text-slate-300 stroke-[1.25] mb-3" />
-                  <span className="font-semibold text-slate-400 block text-sm">等待數據輸入並開始分析</span>
-                  <p className="text-slate-400 text-xs mt-1.5 max-w-xs leading-normal">
+                  <FileCheck2 className="h-12 w-12 text-slate-300 dark:text-slate-600 stroke-[1.25] mb-3" />
+                  <span className="font-semibold text-slate-400 dark:text-slate-500 block text-sm">等待數據輸入並開始分析</span>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs mt-1.5 max-w-xs leading-normal">
                     精準解讀商業變數。請在左側填入 CSV，並按下主按鈕，我們將透過多維度統計探勘，提供即時洞察報告。
                   </p>
                 </div>
@@ -481,9 +518,9 @@ export default function App() {
 
               {loading && !result && (
                 <div className="flex flex-col items-center justify-center py-24 text-center">
-                  <RefreshCw className="h-10 w-10 text-indigo-500 animate-spin mb-4" />
-                  <span className="font-bold text-slate-600 block text-sm">正在深度解析交叉數據指標...</span>
-                  <p className="text-slate-400 text-xs mt-1 max-w-[280px] leading-normal">
+                  <RefreshCw className="h-10 w-10 text-indigo-500 dark:text-indigo-400 animate-spin mb-4" />
+                  <span className="font-bold text-slate-600 dark:text-slate-300 block text-sm">正在深度解析交叉數據指標...</span>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs mt-1 max-w-[280px] leading-normal">
                     Gemini 模型正在剖析關聯權重、極端觀測，並生成繁體中文優化建议報告。
                   </p>
                 </div>
@@ -497,7 +534,7 @@ export default function App() {
             </div>
 
             {/* Micro warning hints */}
-            <div className="px-4 py-2.5 bg-indigo-50/20 border-t border-slate-100 text-[10px] text-indigo-700 leading-normal">
+            <div className="px-4 py-2.5 bg-indigo-50/20 dark:bg-indigo-950/10 border-t border-slate-100 dark:border-slate-800 text-[10px] text-indigo-700 dark:text-indigo-400 leading-normal">
               💡 提報提示：此報告完全忠於您貼上的 CSV 觀測事實。點擊複製按鈕可匯出格式至 PPT/Word。
             </div>
           </section>
@@ -516,13 +553,13 @@ export default function App() {
       </main>
 
       {/* Sleek Design Theme Dark Footer */}
-      <footer className="h-10 bg-slate-900 flex items-center justify-between px-6 sm:px-8 text-[10px] text-slate-400 uppercase tracking-widest mt-6">
+      <footer className="h-10 bg-slate-900 dark:bg-slate-950 flex items-center justify-between px-6 sm:px-8 text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-6">
         <div className="flex gap-6">
           <span>Session: ACTIVE</span>
           <span className="hidden sm:inline">Encryption: SSL</span>
         </div>
         <div className="flex gap-4 items-center">
-          <span className="flex items-center gap-1 bg-emerald-950/40 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/50">
+          <span className="flex items-center gap-1 bg-emerald-950/40 text-emerald-400 px-2 py-0.5 rounded border border-emerald-900/50 dark:border-emerald-900/60">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             CONNECTED
           </span>

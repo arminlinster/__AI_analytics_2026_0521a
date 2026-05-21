@@ -88,9 +88,9 @@ ${focusPrompt}
 請開始對此 CSV 資料進行深度解讀、交叉計算分析，並撰寫繁體中文的優化洞察報告：
 `;
 
-    // Perform generation content with Gemini 3.5 Flash
+    // Perform generation content with Gemini 2.5 Flash
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: userPrompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,

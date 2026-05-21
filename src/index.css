@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 /* -------------------------------------------------------------
  * Custom Styles for Rendering Markdown Analysis Reports (Traditional Chinese)
  * ------------------------------------------------------------- */
@@ -129,4 +135,56 @@
   color: inherit;
   padding: 0;
   font-size: inherit;
+}
+
+/* -------------------------------------------------------------
+ * Premium Dark Mode Overrides for Markdown Analysis Reports
+ * ------------------------------------------------------------- */
+.dark .markdown-body {
+  color: #cbd5e1; /* slate-300 */
+}
+
+.dark .markdown-body h1, 
+.dark .markdown-body h2, 
+.dark .markdown-body h3, 
+.dark .markdown-body h4,
+.dark .markdown-body strong {
+  color: #f8fafc; /* slate-50 */
+}
+
+.dark .markdown-body h1 {
+  border-bottom-color: #334155; /* slate-700 */
+}
+
+.dark .markdown-body blockquote {
+  border-left-color: #475569; /* slate-600 */
+  color: #94a3b8; /* slate-400 */
+}
+
+.dark .markdown-body table {
+  border-color: #334155; /* slate-700 */
+}
+
+.dark .markdown-body th {
+  background-color: #1e293b; /* slate-800 */
+  color: #cbd5e1; /* slate-300 */
+  border-bottom-color: #334155; /* slate-700 */
+}
+
+.dark .markdown-body td {
+  border-bottom-color: #1e293b; /* slate-800 */
+  color: #94a3b8; /* slate-400 */
+}
+
+.dark .markdown-body tr:nth-child(even) {
+  background-color: rgba(30, 41, 59, 0.4);
+}
+
+.dark .markdown-body code {
+  background-color: #1e293b; /* slate-800 */
+  color: #818cf8; /* indigo-400 */
+}
+
+.dark .markdown-body pre {
+  background-color: #020617; /* slate-950 */
 }
