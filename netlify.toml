@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  external_node_modules = ["@google/genai"]
+  node_bundler = "esbuild"
+
+# Redirect /api/analyze to the pure serverless function
+[[redirects]]
+  from = "/api/analyze"
+  to = "/.netlify/functions/analyze"
+  status = 200
+
+# Redirect /api/health to the pure serverless function
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+
+[dev]
+  command = "npx vite"
+  port = 8888
+  targetPort = 5173
