@@ -114,6 +114,9 @@ ${focusPrompt}
     console.error("Gemini Analytical Engine Error:", error);
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ 
         error: error.message || "通訊時發生未知錯誤，請重試或確認專案的金鑰設定。" 
       }),

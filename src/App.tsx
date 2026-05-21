@@ -120,7 +120,18 @@ export default function App() {
         }),
       });
 
-      const data = await response.json();
+      let data: any = {};
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        // If it's a HTML error page, extract text or show status
+        if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+          throw new Error(`伺服器傳回了非預期的 HTML 內容 (狀態碼: ${response.status})。請確認後端服務是否正常啟動，或金鑰設定是否正確。`);
+        }
+        throw new Error(text || `伺服器回應錯誤 (狀態碼: ${response.status})`);
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "伺服器處理失敗");
