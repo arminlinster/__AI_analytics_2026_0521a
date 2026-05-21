@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------------------
+ * Custom Styles for Rendering Markdown Analysis Reports (Traditional Chinese)
+ * ------------------------------------------------------------- */
+
+.markdown-body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.8125rem; /* 13px optimal density */
+  line-height: 1.7;
+  color: #334155; /* slate-700 */
+}
+
+/* Base Headings Styling */
+.markdown-body h1, 
+.markdown-body h2, 
+.markdown-body h3, 
+.markdown-body h4 {
+  font-weight: 700;
+  color: #0f172a; /* slate-900 */
+  margin-top: 1.5rem;
+  margin-bottom: 0.625rem;
+  display: block;
+}
+
+.markdown-body h1 {
+  font-size: 1.125rem; /* 18px */
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.375rem;
+  margin-top: 1.75rem;
+}
+
+.markdown-body h2 {
+  font-size: 1rem; /* 16px */
+  border-left: 3px solid #4f46e5; /* indigo solid accent */
+  padding-left: 0.5rem;
+}
+
+.markdown-body h3 {
+  font-size: 0.875rem; /* 14px */
+}
+
+.markdown-body p {
+  margin-bottom: 0.75rem;
+}
+
+/* Bullet Points & Lists */
+.markdown-body ul {
+  list-style-type: disc;
+  padding-left: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+  padding-left: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body li {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-body strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid #cbd5e1;
+  padding-left: 0.875rem;
+  color: #64748b;
+  font-style: italic;
+  margin: 0.875rem 0;
+}
+
+/* Beautiful custom tables for formatted dataset insights */
+.markdown-body table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  border: 1px solid #e2e8f0;
+  font-size: 0.75rem; /* 12px for statistical readability */
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.markdown-body th {
+  background-color: #f8fafc;
+  color: #334155;
+  font-weight: 600;
+  padding: 0.375rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.markdown-body td {
+  padding: 0.375rem 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #475569;
+}
+
+.markdown-body tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+/* Inline code highlight */
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, SF Pro Mono, Menlo, Monaco, Consolas, monospace;
+  background-color: #f1f5f9;
+  color: #4f46e5;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+/* Block structures */
+.markdown-body pre {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  padding: 0.875rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin-bottom: 0.875rem;
+}
+
+.markdown-body pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
